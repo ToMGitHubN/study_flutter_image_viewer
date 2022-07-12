@@ -162,17 +162,11 @@ class _ListViewImages extends State<ListViewImages> {
 
   @override
   Widget build(BuildContext context) {
-    var list = [
-      "メッセージ",
-      "メッセージ",
-      "メッセージ",
-      "メッセージ",
-      "メッセージ",
-    ];
+    var list = GetFileList.getFileList(Directory.current.path);
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: Text('ListView'),
+              title: Text('ListView表示'),
             ),
             body: ListView.builder(
               itemBuilder: (BuildContext context, int index) {
@@ -208,6 +202,20 @@ class _ListViewImages extends State<ListViewImages> {
         }, // 長押し
       ),
     );
+  }
+}
+
+class GetFileList {
+  static List<String> getFileList(String path) {
+    List<String> fileList = [];
+    Directory dir = new Directory(path);
+    List<FileSystemEntity> list = dir.listSync();
+    for (FileSystemEntity entity in list) {
+      if (entity is File) {
+        fileList.add(entity.path);
+      }
+    }
+    return fileList;
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:mime/mime.dart';// ファイル拡張子
 import 'package:path/path.dart';// ファイルパスライブラリ
+import 'package:path_provider/path_provider.dart';// 特殊フォルダのパス
 
 void main() {
   runApp(const MyApp());
@@ -248,6 +249,11 @@ class FileUtiles {
     if(mimeType == null) return false;
 
     return mimeType.startsWith('image/');
+  }
+
+  static Future<String> getApplicationDocumentsDirectoryPath() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    return directory.path;
   }
   
 }

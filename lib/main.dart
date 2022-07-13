@@ -166,8 +166,8 @@ class _ListViewImages extends State<ListViewImages> {
 
   @override
   Widget build(BuildContext context) {
-    // var cl_file_list = FileList(Directory.current.path);
-    var cl_file_list = FileList('C:/Users/tomita/Pictures/Bing Images');
+    var cl_file_list = FileList(Directory.current.path);
+
     var list = cl_file_list.getFileList();
     return MaterialApp(
         home: Scaffold(

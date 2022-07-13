@@ -162,25 +162,21 @@ class _ListViewImages extends State<ListViewImages> {
 
   @override
   Widget build(BuildContext context) {
-    var list = GetFileList.getFileList(Directory.current.path);
+    // var cl_file_list = FileList(Directory.current.path);
+    var cl_file_list = FileList('C:/Users/tomita/Pictures/Bing Images');
+    var list = cl_file_list.getFileList();
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: Text('ListView表示'),
+              title: Text('ListView - ファイル一覧を表示'),
             ),
             body: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                if (index >= list.length) {
-                  list.addAll([
-                    "メッセージ",
-                    "メッセージ",
-                    "メッセージ",
-                    "メッセージ",
-                  ]);
-                }
-                return _messageItem(list[index]);
-              },
-            )));
+                itemCount: list.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return _messageItem(list[index]); 
+                },
+            ),
+            ));
   }
 
   Widget _messageItem(String title) {
@@ -205,11 +201,21 @@ class _ListViewImages extends State<ListViewImages> {
   }
 }
 
-class GetFileList {
-  static List<String> getFileList(String path) {
-    List<String> fileList = [];
+
+/// 指定フォルダの内容を指定のフィルターをして返す
+class FileList {
+  List<FileSystemEntity> dir_file_lists = [];/// 対象のフォルダ/ファイル一覧
+
+  FileList(String path) {
+    
     Directory dir = new Directory(path);
-    List<FileSystemEntity> list = dir.listSync();
+    this.dir_file_lists = dir.listSync();
+  }
+
+  /// ファイル一覧を取得する
+  List<String> getFileList(){
+    List<String> fileList = [];
+    List<FileSystemEntity> list = this.dir_file_lists;
     for (FileSystemEntity entity in list) {
       if (entity is File) {
         fileList.add(entity.path);

@@ -1,5 +1,9 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:mime/mime.dart';// ファイル拡張子
+import 'package:path/path.dart';// ファイルパスライブラリ
 
 void main() {
   runApp(const MyApp());
@@ -179,15 +183,25 @@ class _ListViewImages extends State<ListViewImages> {
             ));
   }
 
-  Widget _messageItem(String title) {
+  Widget _messageItem(String file_path) {
+
+    Image leading_image;
+    if(FileUtiles.isImage(file_path) == true) {
+      leading_image = Image.file(File(file_path));
+    } else {
+      leading_image = Image.asset('assets/images/no-image-icon.jpg');// 「イメージなし」のアイコン
+    }
+
+    String file_name = basename(file_path);
+
     return Container(
       decoration: new BoxDecoration(
           border:
               new Border(bottom: BorderSide(width: 1.0, color: Colors.grey))),
       child: ListTile(
-        leading: Image.asset('assets/images/no-image-icon.jpg'),
+        leading: leading_image,
         title: Text(
-          title,
+          file_name,
           style: TextStyle(color: Colors.black, fontSize: 18.0),
         ),
         onTap: () {
@@ -223,6 +237,19 @@ class FileList {
     }
     return fileList;
   }
+}
+
+/// ファイル系 便利機能
+class FileUtiles {
+
+  /// イメージファイルか判定する
+  static bool isImage(String path) {
+    final mimeType = lookupMimeType(path);
+    if(mimeType == null) return false;
+
+    return mimeType.startsWith('image/');
+  }
+  
 }
 
 class MyHomePage extends StatefulWidget {

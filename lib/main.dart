@@ -171,17 +171,25 @@ class _ListViewImages extends State<ListViewImages> {
 
     var list = cl_file_list.getFileList();
     return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(
-              title: Text('ListView - ファイル一覧を表示'),
-            ),
-            body: ListView.builder(
-                itemCount: list.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _messageItem(list[index]); 
-                },
-            ),
-            ));
+      home: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(icon: Icon(Icons.menu), onPressed: () {}),
+              title: Text('ImageViewer ListView - ファイル一覧を表示'),
+              centerTitle: true,
+              actions: [
+                IconButton(icon: Icon(Icons.search), onPressed: () {}),
+                IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
+              ],
+            elevation: 2.0,
+          ),
+          body: ListView.builder(
+              itemCount: list.length,
+              itemBuilder: (BuildContext context, int index) {
+              return _messageItem(list[index]); 
+            },
+          ),
+      )
+    );
   }
 
   Widget _messageItem(String file_path) {

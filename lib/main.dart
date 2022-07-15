@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -167,27 +168,52 @@ class _ListViewImages extends State<ListViewImages> {
 
   @override
   Widget build(BuildContext context) {
-    var cl_file_list = FileList(Directory.current.path);
 
-    var list = cl_file_list.getFileList();
+    // 非同期系処理 => FutureBuilderに渡す
+    final Future<List<String>> _wait_func = Future<List<String>>.delayed(
+      const Duration(seconds: 2),
+      () async{
+        var application_documents_directory_path = await FileUtiles.getApplicationDocumentsDirectoryPath();
+        var cl_file_list = FileList(application_documents_directory_path);
+
+        return cl_file_list.getFileList();
+      },
+    );
+
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
             leading: IconButton(icon: Icon(Icons.menu), onPressed: () {}),
-              title: Text('ImageViewer ListView - ファイル一覧を表示'),
+              title: const Text('ImageViewer ListView - ファイル一覧を表示'),
               centerTitle: true,
               actions: [
-                IconButton(icon: Icon(Icons.search), onPressed: () {}),
-                IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
+                IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+                IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
               ],
             elevation: 2.0,
           ),
-          body: ListView.builder(
-              itemCount: list.length,
-              itemBuilder: (BuildContext context, int index) {
-              return _messageItem(list[index]); 
+          body: FutureBuilder<List<String>>(
+            future: _wait_func,
+            builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+              if (snapshot.hasData) {
+                final List<String> fileList = snapshot.data ?? [];
+                
+                return ListView.builder(
+                    itemCount: fileList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                    return _messageItem(fileList[index]); 
+                  },
+                );
+
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+
+              } else {
+                return Text('Loading...');
+              }
+
             },
-          ),
+          )
       )
     );
   }

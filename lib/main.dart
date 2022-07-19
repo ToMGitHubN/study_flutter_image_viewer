@@ -218,16 +218,16 @@ class _ListViewImages extends State<ListViewImages> {
     );
   }
 
-  Widget _messageItem(String file_path) {
+  Widget _messageItem(String filePath) {
 
     Image leading_image;
-    if(FileUtiles.isImage(file_path) == true) {
-      leading_image = Image.file(File(file_path));
+    if(FileUtiles.isImage(filePath) == true) {
+      leading_image = Image.file(File(filePath));
     } else {
       leading_image = Image.asset('assets/images/no-image-icon.jpg');// 「イメージなし」のアイコン
     }
 
-    String file_name = basename(file_path);
+    String file_name = basename(filePath);
 
     return Container(
       decoration: new BoxDecoration(
@@ -253,18 +253,18 @@ class _ListViewImages extends State<ListViewImages> {
 
 /// 指定フォルダの内容を指定のフィルターをして返す
 class FileList {
-  List<FileSystemEntity> dir_file_lists = [];/// 対象のフォルダ/ファイル一覧
+  List<FileSystemEntity> dirFileLists = [];/// 対象のフォルダ/ファイル一覧
 
   FileList(String path) {
     
-    Directory dir = new Directory(path);
-    this.dir_file_lists = dir.listSync();
+    Directory dir = Directory(path);
+    dirFileLists = dir.listSync();
   }
 
   /// ファイル一覧を取得する
   List<String> getFileList(){
     List<String> fileList = [];
-    List<FileSystemEntity> list = this.dir_file_lists;
+    List<FileSystemEntity> list = dirFileLists;
     for (FileSystemEntity entity in list) {
       if (entity is File) {
         fileList.add(entity.path);
